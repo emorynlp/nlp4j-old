@@ -116,7 +116,57 @@
             </configuration>
           </execution>
         </executions>
+          </plugin>
+                <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>1.10</version>
+        <executions>
+          <execution>
+            <id>appassembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <copyConfigurationDirectory>true</copyConfigurationDirectory>
+          <programs>
+            <program>
+              <mainClass>edu.emory.mathcs.nlp.bin.NLPTrain</mainClass>
+              <jvmSettings>
+                <maxMemorySize>10g</maxMemorySize>
+                <extraArguments>
+                  <extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
+                </extraArguments>
+              </jvmSettings>
+              <id>nlptrain</id>
+            </program>
+            <program>
+              <mainClass>edu.emory.mathcs.nlp.bin.NLPDecode</mainClass>
+              <jvmSettings>
+                <maxMemorySize>8g</maxMemorySize>
+                <extraArguments>
+                  <extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
+                </extraArguments>
+              </jvmSettings>
+              <id>nlpdecode</id>
+            </program>
+            <program>
+              <mainClass>edu.emory.mathcs.nlp.bin.DEPEvaluate</mainClass>
+              <jvmSettings>
+                <maxMemorySize>8g</maxMemorySize>
+                <extraArguments>
+                  <extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
+                </extraArguments>
+              </jvmSettings>
+              <id>depeval</id>
+            </program>
+          </programs>
+        </configuration>
       </plugin>
+
     </plugins>
   </build>
 
@@ -157,5 +207,16 @@
       <version>18.0</version>
       <scope>test</scope>
     </dependency>
+    <!-- A unit test, and the command-line wrappers, need the english
+         models. But we don't want to drag them into the dependency
+         tree of all applications, so we mark the dependency 'optional'.
+    -->
+        <dependency>
+      <groupId>edu.emory.mathcs.nlp</groupId>
+      <artifactId>nlp4j-english</artifactId>
+      <version>1.1.2</version>
+      <optional>true</optional>
+    </dependency>
+
   </dependencies>
 </project>
